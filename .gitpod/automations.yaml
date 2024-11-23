@@ -1,0 +1,7 @@
+tasks:
+    hello:
+        name: Install
+        command: npm install
+        triggeredBy:
+        - postDevcontainerStart
+        - manual
