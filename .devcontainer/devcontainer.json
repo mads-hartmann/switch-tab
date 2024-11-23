@@ -1,4 +1,8 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/typescript-node"
+    "image": "mcr.microsoft.com/devcontainers/typescript-node",
+    "customizations": {
+        "vscode": {
+            "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "ms-vscode.extension-test-runner"]
+        }
+    }
 }
-  

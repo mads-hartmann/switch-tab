@@ -5,17 +5,20 @@ Just for myself
 ## TODO
 
 Features:
-- [ ] Enrich quick pick items with file icons
-- [ ] Make it possible to *pin* tabs
-- [ ] Make it possible to close tabs
+
+-   [ ] Enrich quick pick items with file icons
+-   [ ] Make it possible to _pin_ tabs
+-   [ ] Make it possible to close tabs
 
 Setup:
-- [ ] Configure prettier
+
+-   [x] Configure prettier
+-   [ ]
 
 ## Development
 
 ```
-npm i 
+npm i
 ./node_modules/.bin/vsce package
 # Install using the Install from VSIX command
 ```
