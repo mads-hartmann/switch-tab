@@ -1,37 +1,10 @@
 import * as vscode from "vscode";
 
-type Tab = vscode.QuickPickItem & { uri?: vscode.Uri };
-
-// Sort of hacky - I just need to be able to show the last active editor
-// as the first item in the list so that you can quickly jump back and forth between two files
-let lastFocusedEditor: vscode.TextEditor | null = null;
-let activeEditor: vscode.TextEditor | null = null;
+type QuickPickItemTab = vscode.QuickPickItem & { tab?: vscode.Tab };
 
 export function activate(context: vscode.ExtensionContext) {
-    context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor((editor) => {
-            if (editor) {
-                lastFocusedEditor = activeEditor;
-                activeEditor = editor;
-            }
-        }),
-    );
-
     const disposable = vscode.commands.registerCommand("switch-tab.quickOpenTab", async () => {
-        const tabs: Tab[] = [];
-
-        if (lastFocusedEditor) {
-            tabs.push({
-                label: "recently opened",
-                kind: vscode.QuickPickItemKind.Separator,
-            });
-            tabs.push({
-                label: lastFocusedEditor.document.fileName,
-                description: lastFocusedEditor.document.uri.path,
-                uri: lastFocusedEditor.document.uri,
-                iconPath: vscode.ThemeIcon.File,
-            });
-        }
+        const tabs: QuickPickItemTab[] = [];
 
         vscode.window.tabGroups.all.map((tabGroup, tabGroupIndex) => {
             tabs.push({
@@ -40,28 +13,55 @@ export function activate(context: vscode.ExtensionContext) {
             });
             tabGroup.tabs.map((tab) => {
                 if (tab.input instanceof vscode.TabInputText) {
+                    let icon = "";
+                    if (tab.isPinned && tab.isDirty) {
+                        icon = " $(pinned-dirty)";
+                    } else if (tab.isPinned) {
+                        icon = " $(pinned)";
+                    } else if (tab.isDirty) {
+                        icon = " $(close-dirty)";
+                    }
+                    // TODO: Would be lovely to have it use the file icons. Eventually it should happen automatically
+                    // when iconPath is set to file and an resourceUri is passed, but for now that's not implemented: https://github.com/microsoft/vscode/issues/59826
                     tabs.push({
-                        label: tab.label,
+                        label: `${tab.label}${icon}`,
                         description: tab.input.uri.path,
-                        uri: tab.input.uri,
+                        buttons: [
+                            { iconPath: new vscode.ThemeIcon("close"), tooltip: "Close" },
+                            { iconPath: new vscode.ThemeIcon("pin"), tooltip: "Pin" },
+                        ],
                         kind: vscode.QuickPickItemKind.Default,
                         iconPath: vscode.ThemeIcon.File,
+                        tab: tab,
                     });
                 }
             });
         });
 
-        const tab = await vscode.window.showQuickPick(tabs, {
-            title: "Select a tab",
-            placeHolder: "Select a tab placeholder",
-            canPickMany: false,
+        const pick = vscode.window.createQuickPick<QuickPickItemTab>();
+        pick.title = "Switch Tab";
+        pick.placeholder = "Select a tab";
+        pick.items = tabs;
+        pick.canSelectMany = false;
+
+        pick.onDidChangeSelection((selections) => {
+            pick.hide();
+            const selection = selections[0];
+            const tab = selection?.tab;
+            if (tab && tab.input instanceof vscode.TabInputText) {
+                vscode.window.showTextDocument(tab.input.uri);
+            }
         });
 
-        if (!tab || !tab.uri) {
-            return;
-        }
+        pick.onDidHide(() => pick.dispose());
 
-        vscode.window.showTextDocument(tab.uri);
+        pick.onDidTriggerItemButton((e) => {
+            if (e.button.tooltip === "Close" && e.item.tab) {
+                vscode.window.tabGroups.close(e.item.tab);
+            }
+        });
+
+        pick.show();
     });
 
     context.subscriptions.push(disposable);
