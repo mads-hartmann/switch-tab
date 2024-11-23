@@ -1,4 +1,3 @@
-import { group } from "console";
 import * as vscode from "vscode";
 
 type Tab = vscode.QuickPickItem & { uri?: vscode.Uri };
