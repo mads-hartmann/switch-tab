@@ -14,6 +14,8 @@ Setup:
 
 -   [x] Configure devcontainer and automations
 -   [x] Configure prettier
+-   [ ] Fix tests so they run in Gitpod Flex
+-   [ ] Publish extension
 -   [ ] Configure CI
 
 ## Development
