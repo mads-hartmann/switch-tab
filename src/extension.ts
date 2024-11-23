@@ -27,7 +27,9 @@ export function activate(context: vscode.ExtensionContext) {
                         label: `${tab.label}${icon}`,
                         description: tab.input.uri.path,
                         buttons: [
+                            // TODO: Show dirty icon if the file is dirt
                             { iconPath: new vscode.ThemeIcon("close"), tooltip: "Close" },
+                            // TODO: Show unpin icon if the tab is pinned
                             { iconPath: new vscode.ThemeIcon("pin"), tooltip: "Pin" },
                         ],
                         kind: vscode.QuickPickItemKind.Default,
@@ -58,6 +60,9 @@ export function activate(context: vscode.ExtensionContext) {
         pick.onDidTriggerItemButton((e) => {
             if (e.button.tooltip === "Close" && e.item.tab) {
                 vscode.window.tabGroups.close(e.item.tab);
+            }
+            if (e.button.tooltip === "Pin" && e.item.tab) {
+                // TODO: Pin tab
             }
         });
 

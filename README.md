@@ -8,9 +8,8 @@ Features:
 
 -   [ ] Fix it so that it focuses the exiting open file in the existing tab group
 -   [ ] It should refresh the list when you close/pin tabs
+-   [ ] Finish pin implementation
 -   [ ] Extend it so that the default selection is the most recently viewed tab
--   [ ] Make it possible to _pin_ tabs
--   [ ] Make it possible to close tabs
 
 Setup:
 
