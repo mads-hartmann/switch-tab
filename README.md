@@ -12,8 +12,9 @@ Features:
 
 Setup:
 
+-   [x] Configure devcontainer and automations
 -   [x] Configure prettier
--   [ ]
+-   [ ] Configure CI
 
 ## Development
 
