@@ -1,6 +1,8 @@
 # switch-tab README
 
-Just for myself
+This extension adds the command `switch-tab.quickOpenTab` which allows you to quickly switch between tabs.
+
+The extension fills a niche gab that isn't quite solved by `workbench.action.quickOpenPreviousRecentlyUsedEditor` or `workbench.action.showAllEditors`. `workbench.action.quickOpenPreviousRecentlyUsedEditor` doesn't allow you to type to filter down the list. `workbench.action.showAllEditors` does, but it doesn't default the selection to the previous active editor, which means you can't use it to quickly switch between two editors.
 
 ## TODO
 
